@@ -1,24 +1,19 @@
-# vue-docker
+# Vue-Docker
 
-## Project setup
-```
-npm install
-```
+> 基于 Vue 打造的 Docker app
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 技术支持
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### 安装运行
 
-### Lints and fixes files
-```
-npm run lint
-```
+1. xx
+2. xxx
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 组件依赖
+
+1. xxx
+2. xxxx
+
+## License
+
+[MIT](https://github.com/MoMoOwO/VueDocker/LICENSE)
