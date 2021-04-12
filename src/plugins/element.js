@@ -4,10 +4,13 @@ import Vue from 'vue'
   Button, Message, Container, Header, Main, Alert, Card, Select, Option,
   Popover, Divider, RadioGroup, Radio, Input, ColorPicker
 } from 'element-ui' */
-import { Button } from 'element-ui'
+import { Button, Form, FormItem, Input } from 'element-ui'
 // 国际化配置
 import enLang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 locale.use(enLang)
 // 将组建添加到 Vue 实例中
 Vue.use(Button)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
