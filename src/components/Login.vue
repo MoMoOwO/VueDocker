@@ -79,7 +79,12 @@ export default {
           // 登录验证不通过
           return 0
         } else {
-          console.log(111)
+          this.$message({
+            message: '登陆成功！',
+            type: 'success'
+          })
+          // 登陆成功导航到首页
+          this.$router.push('/home')
         }
       })
     }
