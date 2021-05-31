@@ -74,46 +74,66 @@ export default {
       // 菜单栏数据
       menutList: [
         {
-          id: 1,
-          itemName: 'Local',
+          id: 0,
+          itemName: '主机信息',
           path: 'lcoal',
           icon: 'el-icon-link',
           children: [
             {
               id: 1,
-              itemName: 'Dashboard',
+              itemName: '总览',
               path: 'dashboard',
               icon: 'el-icon-data-board'
-            },
+            }
+          ]
+        },
+        {
+          id: 1,
+          itemName: 'Docker',
+          path: 'docker',
+          icon: 'el-icon-receiving',
+          children: [
             {
-              id: 2,
-              itemName: 'Containers',
+              id: 1,
+              itemName: '容器',
               path: 'containers',
               icon: 'el-icon-box'
             },
             {
+              id: 2,
+              itemName: '镜像',
+              path: 'gho',
+              icon: 'el-icon-document-copy'
+            },
+            {
               id: 3,
-              itemName: 'Images',
-              path: 'images',
-              icon: 'el-icon-picture-outline'
+              itemName: '逻辑卷',
+              path: 'volumes',
+              icon: 'el-icon-help'
+            },
+            {
+              id: 4,
+              itemName: '网络',
+              path: 'networks',
+              icon: 'el-icon-cpu'
             }
           ]
         },
         {
           id: 2,
-          itemName: 'Settings',
+          itemName: '设置',
           path: 'settings',
           icon: 'el-icon-setting',
           children: [
             {
               id: 1,
-              itemName: 'Users',
+              itemName: '用户管理',
               path: 'users',
               icon: 'el-icon-user'
             },
             {
               id: 2,
-              itemName: 'Settings',
+              itemName: '配置项',
               path: 'settings',
               icon: 'el-icon-setting'
             }
