@@ -82,7 +82,7 @@ export default {
         {
           id: 0,
           itemName: '主机信息',
-          path: 'lcoal',
+          path: 'local',
           icon: 'el-icon-link',
           children: [
             {
