@@ -7,7 +7,9 @@ import Vue from 'vue'
 import {
   Button, Form, FormItem, Input, Message,
   Container, Header, Aside, Main,
-  Menu, Submenu, MenuItem
+  Menu, Submenu, MenuItem,
+  Breadcrumb, BreadcrumbItem,
+  Card, Table, TableColumn
 } from 'element-ui'
 // 国际化配置
 import enLang from 'element-ui/lib/locale/lang/en'
@@ -25,5 +27,10 @@ Vue.use(Main)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(TableColumn)
 // 将 Message 挂载到 Vue 实例上
 Vue.prototype.$message = Message

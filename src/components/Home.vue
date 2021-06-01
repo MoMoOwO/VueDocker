@@ -29,6 +29,8 @@
           :default-openeds="opentedMenus"
           :collapse="isCollapsed"
           :collapse-transition="false"
+          router
+          :default-active="activePath"
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -47,7 +49,8 @@
             <el-menu-item
               v-for="subItem in item.children"
               :key="subItem.id"
-              :index="item.id + '-' + subItem.id"
+              :index="'/' + subItem.path"
+              @click="saveNavState('/' + subItem.path)"
             >
               <template slot="title">
                 <i :class="subItem.icon"></i>
@@ -58,7 +61,10 @@
         </el-menu>
       </el-aside>
       <!-- 主题内容区域 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -70,7 +76,7 @@ export default {
   data() {
     return {
       // 默认展开菜单项 index 数组
-      opentedMenus: ['1', '2'],
+      opentedMenus: ['0', '1', '2'],
       // 菜单栏数据
       menutList: [
         {
@@ -141,8 +147,13 @@ export default {
         }
       ],
       // 是否折叠菜单栏
-      isCollapsed: false
+      isCollapsed: false,
+      // 默认活动标签
+      activePath: ''
     }
+  },
+  created() {
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   mounted() {},
   methods: {
@@ -156,6 +167,11 @@ export default {
       this.isCollapsed = !this.isCollapsed
       // 展开时保持展开所有子菜单
       // [!this.isCollapsed && (this.opentedMenus = ['1', '2'])]
+    },
+    // 保存当前导航路由 path
+    saveNavState(activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     }
   }
 }
