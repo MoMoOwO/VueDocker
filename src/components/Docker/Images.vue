@@ -12,7 +12,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-input
-            placeholder="请输入内容"
+            placeholder="请输入镜像名"
             prefix-icon="el-icon-search"
             clearable
             v-model="queryInfo.search"
@@ -20,7 +20,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="pageSizeChange">搜索</el-button>
+          <el-button type="primary" @click="getImagesList">搜索</el-button>
         </el-col>
       </el-row>
 
@@ -42,8 +42,8 @@
       <el-pagination
         @size-change="pageSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="queryInfo.skip+1"
-        :page-sizes="[1, 2, 3, 4]"
+        :current-page="queryInfo.skip"
+        :page-sizes="[1, 5, 10]"
         :page-size="queryInfo.limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   components: {},
   props: [],
@@ -63,8 +65,8 @@ export default {
       total: 0, // 总数目
       // 查询信息
       queryInfo: {
-        skip: 0, // 当前页号 - 1
-        limit: 10, // 每页显示条目数
+        skip: 1, // 当前页号
+        limit: 5, // 每页显示条目数
         search: '' // 查询条件
       }
     }
@@ -76,8 +78,10 @@ export default {
   methods: {
     // 获取镜像数据列表
     async getImagesList() {
+      const params = _.cloneDeep(this.queryInfo)
+      params.skip -= 1
       const { data: res } = await this.axios.get('images/', {
-        params: this.queryInfo
+        params
       })
       if (res.Code === 0) {
         this.imagesList = res.Data.Images
@@ -87,12 +91,15 @@ export default {
       }
     },
     // 修改每页数据条目数
-    pageSizeChange() {
-      console.log(this.queryInfo)
+    pageSizeChange(newSize) {
+      this.queryInfo.skip = 1 // 重置起始页为 1
+      this.queryInfo.limit = newSize
+      this.getImagesList()
     },
     // 切换当前显示页
-    handleCurrentChange() {
-      console.log(this.queryInfo)
+    handleCurrentChange(newPage) {
+      this.queryInfo.skip = newPage
+      this.getImagesList()
     }
   }
 }
