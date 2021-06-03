@@ -5,6 +5,7 @@ import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Dashboard from '../components/Local/Dashboard.vue'
+import Images from '../components/Docker/Images.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,8 @@ const routes = [
     redirect: '/welcome',
     children: [
       { path: '/welcome', component: Welcome },
-      { path: '/dashboard', component: Dashboard }
+      { path: '/dashboard', component: Dashboard },
+      { path: '/images', component: Images }
     ]
   }
 ]
