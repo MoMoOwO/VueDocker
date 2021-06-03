@@ -102,7 +102,7 @@ export default {
             {
               id: 2,
               itemName: '镜像',
-              path: 'gho',
+              path: 'images',
               icon: 'el-icon-document-copy'
             },
             {
