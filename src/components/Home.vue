@@ -122,6 +122,12 @@ export default {
               itemName: '网络',
               path: 'networks',
               icon: 'el-icon-cpu'
+            },
+            {
+              id: 5,
+              itemName: '检索',
+              path: 'search',
+              icon: 'el-icon-search'
             }
           ]
         },

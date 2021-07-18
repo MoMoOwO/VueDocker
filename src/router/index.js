@@ -6,6 +6,8 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Dashboard from '../components/Local/Dashboard.vue'
 import Images from '../components/Docker/Images.vue'
+import Containers from '../components/Docker/Containers.vue'
+import Networks from '../components/Docker/Networks.vue'
 
 Vue.use(VueRouter)
 
@@ -19,7 +21,9 @@ const routes = [
     children: [
       { path: '/welcome', component: Welcome },
       { path: '/dashboard', component: Dashboard },
-      { path: '/images', component: Images }
+      { path: '/images', component: Images },
+      { path: '/containers', component: Containers },
+      { path: '/networks', component: Networks }
     ]
   }
 ]

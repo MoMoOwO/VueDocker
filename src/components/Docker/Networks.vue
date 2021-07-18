@@ -4,7 +4,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>Docker</el-breadcrumb-item>
-      <el-breadcrumb-item>镜像</el-breadcrumb-item>
+      <el-breadcrumb-item>网络</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-card>
@@ -12,7 +12,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-input
-            placeholder="请输入镜像名"
+            placeholder="请输入网络名"
             prefix-icon="el-icon-search"
             clearable
             v-model="queryInfo.search"
@@ -20,27 +20,36 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="getImagesList">搜索</el-button>
+          <el-button type="primary" @click="getNetworksList">搜索</el-button>
         </el-col>
       </el-row>
 
       <!-- 列表区域 -->
       <el-table
         v-loading="isLoading"
-        :data="imagesList"
+        :data="networksList"
         style="width: 100%"
         border
         stripe
+        @expand-change="inspectDetails"
       >
-        <el-table-column align="center" prop="Repository" label="镜像名">
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-tag type="text">{{ scope.row.NetworkId }}</el-tag>
+            <br />
+            <span>{{ networkDetails }}</span>
+          </template>
         </el-table-column>
-        <el-table-column align="center" prop="Tag" label="版本号">
+        <el-table-column align="center" prop="NetworkId" label="网络设备ID">
+          <template slot-scope="scope">
+            <el-tag type="text">{{ scope.row.NetworkId }}</el-tag>
+          </template>
         </el-table-column>
-        <el-table-column align="center" prop="ImageId" label="镜像编号">
+        <el-table-column align="left" prop="Name" label="网络名">
         </el-table-column>
-        <el-table-column align="center" prop="Created" label="创建时间">
+        <el-table-column align="left" prop="Driver" label="驱动">
         </el-table-column>
-        <el-table-column align="center" prop="Size" label="大小">
+        <el-table-column align="left" prop="Scope" label="模式">
         </el-table-column>
       </el-table>
 
@@ -65,7 +74,7 @@ export default {
   props: [],
   data() {
     return {
-      imagesList: [], // 奖项数据列表
+      networksList: [], // 奖项数据列表
       total: 0, // 总数目
       // 查询信息
       queryInfo: {
@@ -73,40 +82,55 @@ export default {
         limit: 5, // 每页显示条目数
         search: '' // 查询条件
       },
-      isLoading: false // 缓冲条
+      isLoading: true,
+      networkDetails: {}
     }
   },
   created() {
-    this.getImagesList()
+    this.getNetworksList()
   },
+  mounted() {},
   methods: {
-    // 获取镜像数据列表
-    async getImagesList() {
+    // 获取容器数数据列表
+    async getNetworksList() {
       const params = this._.cloneDeep(this.queryInfo)
       params.skip -= 1
-      const { data: res } = await this.axios.get('images/', {
+      const { data: res } = await this.axios.get('networks/', {
         params
       })
       if (res.Code === 0) {
-        this.imagesList = res.Data.Images
+        this.networksList = res.Data.Networks
         this.total = res.Data.Len
       } else {
-        this.$message.error('获取镜像信息失败！')
+        this.$message.error('获取网络信息失败！')
       }
       this.isLoading = false
+    },
+    // 获取网络详情信息
+    async inspectDetails(row, expandedRows) {
+      if (expandedRows.length > 0) {
+        const { data: res } = await this.axios.get('networks/inspect/', {
+          params: { networkId: row.NetworkId }
+        })
+        if (res.Code === 0) {
+          this.networkDetails = res.Data.NetworkInfo
+        } else {
+          this.$message.error('获取容器详情失败！')
+        }
+      }
     },
     // 修改每页数据条目数
     pageSizeChange(newSize) {
       this.isLoading = true
       this.queryInfo.skip = 1 // 重置起始页为 1
       this.queryInfo.limit = newSize
-      this.getImagesList()
+      this.getNetworksList()
     },
     // 切换当前显示页
     handleCurrentChange(newPage) {
       this.isLoading = true
       this.queryInfo.skip = newPage
-      this.getImagesList()
+      this.getNetworksList()
     }
   }
 }
