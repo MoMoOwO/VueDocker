@@ -10,9 +10,15 @@ import './plugins/element.js'
 // 导入 element-ui 组件相关样式
 import 'element-ui/lib/theme-chalk/index.css'
 
+// 引入 loadsh
+import _ from 'lodash'
+
 // 导入axios
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
+
+// 注册 loadsh
+Vue.prototype._ = _
 
 // 配置请求根路径
 Axios.defaults.baseURL = '/api/'
