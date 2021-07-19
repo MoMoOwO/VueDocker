@@ -35,9 +35,11 @@
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-tag type="text">{{ scope.row.NetworkId }}</el-tag>
-            <br />
-            <span>{{ networkDetails }}</span>
+            <span
+              v-loading="!networkDetails[scope.row.NetworkId] && detailLoading"
+            >
+              {{ networkDetails[scope.row.NetworkId] }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="NetworkId" label="网络设备ID">
@@ -83,7 +85,8 @@ export default {
         search: '' // 查询条件
       },
       isLoading: true,
-      networkDetails: {}
+      networkDetails: {},
+      detailLoading: true
     }
   },
   created() {
@@ -109,11 +112,13 @@ export default {
     // 获取网络详情信息
     async inspectDetails(row, expandedRows) {
       if (expandedRows.length > 0) {
+        this.detailLoading = true
         const { data: res } = await this.axios.get('networks/inspect/', {
           params: { networkId: row.NetworkId }
         })
         if (res.Code === 0) {
-          this.networkDetails = res.Data.NetworkInfo
+          this.networkDetails[row.NetworkId] = res.Data.NetworkInfo
+          this.detailLoading = false
         } else {
           this.$message.error('获取容器详情失败！')
         }

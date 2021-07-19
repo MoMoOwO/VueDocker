@@ -31,13 +31,18 @@
         style="width: 100%"
         border
         stripe
+        lazy
         @expand-change="inspectDetails"
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-tag type="text">{{ scope.row.ContainerId }}</el-tag>
-            <br />
-            <span>{{ containerDetails }}</span>
+            <span
+              v-loading="
+                !containerDetails[scope.row.ContainerId] && detailLoading
+              "
+            >
+              {{ containerDetails[scope.row.ContainerId] }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="ContainerId" label="容器ID">
@@ -80,7 +85,7 @@ export default {
   props: [],
   data() {
     return {
-      containersList: [], // 奖项数据列表
+      containersList: [], // 容器数据列表
       total: 0, // 总数目
       // 查询信息
       queryInfo: {
@@ -90,7 +95,8 @@ export default {
       },
       isLoading: true,
       // 容器详情
-      containerDetails: {}
+      containerDetails: {},
+      detailLoading: true
     }
   },
   created() {
@@ -115,11 +121,13 @@ export default {
     // 展开行，查看详情信息
     async inspectDetails(row, expandedRows) {
       if (expandedRows.length > 0) {
+        this.detailLoading = true
         const { data: res } = await this.axios.get('containers/inspect/', {
           params: { containerId: row.ContainerId }
         })
         if (res.Code === 0) {
-          this.containerDetails = res.Data.ContainerInfo
+          this.containerDetails[row.ContainerId] = res.Data.ContainerInfo
+          this.detailLoading = false
         } else {
           this.$message.error('获取容器详情失败！')
         }
