@@ -81,7 +81,7 @@ export default {
       menutList: [
         {
           id: 0,
-          itemName: '主机信息',
+          itemName: '系统信息',
           path: 'local',
           icon: 'el-icon-link',
           children: [
