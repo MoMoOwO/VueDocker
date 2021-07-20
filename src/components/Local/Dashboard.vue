@@ -7,67 +7,42 @@
       <el-breadcrumb-item>概览</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class="box-card">
-      <!-- 列表区域 -->
-      <!-- <el-table :data="HostInfoList" style="width: 100%" border stripe>
-        <el-table-column align="center" prop="HostName" label="主机名称">
-        </el-table-column>
-        <el-table-column align="center" label="CPU 信息">
-          <el-table-column
-            align="center"
-            prop="CpuInformation.PhysicalCnt"
-            label="物理内核"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="CpuInformation.LogicalCnt"
-            label="逻辑内核"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="CpuInformation.ModelName"
-            label="型号"
-          >
-          </el-table-column>
-        </el-table-column>
-      </el-table> -->
-      <el-card class="info-card">
-        <div slot="header" class="clearfix">
-          <div class="blue-box"></div>
-          <span>主机信息</span>
-        </div>
-        <div>
-          主机名称：
-          {{ HostInfo.HostName }}
-        </div>
-        <div>
-          CPU信息 物理内核：{{
-            HostInfo.CpuInformation.PhysicalCnt
-          }}
-          逻辑内核：{{ HostInfo.CpuInformation.LogicalCnt }} 型号：{{
-            HostInfo.CpuInformation.ModelName
-          }}
-        </div>
-      </el-card>
-      <el-card class="info-card">
-        <div slot="header" class="clearfix">
-          <div class="blue-box"></div>
-          <span>CLI 信息</span>
-        </div>
-        <div>
-          CLI 版本：{{ CLIInfo.CliInfo.CliVersion }} 平台：{{
-            CLIInfo.CliInfo.Platform
-          }}
-          Docker 版本：{{ CLIInfo.CliInfo.DockerVersion }}
-        </div>
-        <div>
-          镜像总数：{{ CLIInfo.CliInfo.ImagesCount }} 容器总数：{{
-            CLIInfo.cliInfo.ContainersCount
-          }}
-          网络总数：{{ CLIInfo.cliInfo.NetworksCount }}
-        </div>
-      </el-card>
+      <div class="box-body">
+        <el-card class="info-card" v-if="HostInfo.CpuInformation">
+          <div slot="header" class="clearfix">
+            <div class="blue-box"></div>
+            <span>主机信息</span>
+          </div>
+          <el-row>
+            <el-col :span="12">
+              <p>主机名称：{{ HostInfo.HostName }}</p>
+            </el-col>
+            <el-col :span="12">
+              <p>CPU信息</p>
+              <p>物理内核：{{ HostInfo.CpuInformation.PhysicalCnt }}</p>
+              <p>逻辑内核：{{ HostInfo.CpuInformation.LogicalCnt }}</p>
+              <p>型号：{{ HostInfo.CpuInformation.ModelName }}</p>
+            </el-col>
+          </el-row>
+        </el-card>
+        <el-card class="info-card" v-if="CLIInfo.CliInfo">
+          <div slot="header" class="clearfix">
+            <div class="blue-box"></div>
+            <span>CLI 信息</span>
+          </div>
+          <el-row>
+            <el-col :span="12">
+              <p>CLI 版本：{{ CLIInfo.CliInfo.CliVersion }}</p>
+              <p>平台：{{ CLIInfo.CliInfo.Platform }}</p>
+              <p>Docker 版本：{{ CLIInfo.CliInfo.DockerVersion }}</p>
+            </el-col>
+            <el-col :span="12">
+              <p>镜像总数：{{ CLIInfo.CliInfo.ImagesCount }}</p>
+              <p>网络总数：{{ CLIInfo.CliInfo.NetworksCount }}</p>
+            </el-col>
+          </el-row>
+        </el-card>
+      </div>
     </el-card>
   </div>
 </template>
@@ -85,7 +60,6 @@ export default {
   created() {
     this.getHostInfo()
     this.getCLIInfo()
-    console.log(this.HostInfo, this.CLIInfo)
   },
   mounted() {},
   methods: {
@@ -112,4 +86,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.box-card {
+  .box-body {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    .info-card {
+      width: 500px;
+      border: 1px solid #ebeef5 !important;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+      .clearfix {
+        display: flex;
+        .blue-box {
+          height: inherit;
+          width: 5px;
+          margin-right: 10px;
+          background-color: #409eff;
+        }
+      }
+    }
+  }
+}
 </style>
