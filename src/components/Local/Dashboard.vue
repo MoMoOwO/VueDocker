@@ -15,13 +15,26 @@
           </div>
           <el-row>
             <el-col :span="12">
-              <p>主机名称：{{ HostInfo.HostName }}</p>
+              <span class="main-info">主机名称：</span>
+              <span class="minor-info">{{ HostInfo.HostName }}</span>
             </el-col>
             <el-col :span="12">
-              <p>CPU信息</p>
-              <p>物理内核：{{ HostInfo.CpuInformation.PhysicalCnt }}</p>
-              <p>逻辑内核：{{ HostInfo.CpuInformation.LogicalCnt }}</p>
-              <p>型号：{{ HostInfo.CpuInformation.ModelName }}</p>
+              <span class="main-info">CPU信息</span>
+              <br />
+              <span class="main-info"> 物理内核： </span>
+              <span class="minor-info">
+                {{ HostInfo.CpuInformation.PhysicalCnt }}
+              </span>
+              <br />
+              <span class="main-info">逻辑内核：</span>
+              <span class="minor-info">
+                {{ HostInfo.CpuInformation.LogicalCnt }}
+              </span>
+              <br />
+              <span class="main-info">型号：</span>
+              <span class="minor-info">
+                {{ HostInfo.CpuInformation.ModelName }}
+              </span>
             </el-col>
           </el-row>
         </el-card>
@@ -32,13 +45,27 @@
           </div>
           <el-row>
             <el-col :span="12">
-              <p>CLI 版本：{{ CLIInfo.CliInfo.CliVersion }}</p>
-              <p>平台：{{ CLIInfo.CliInfo.Platform }}</p>
-              <p>Docker 版本：{{ CLIInfo.CliInfo.DockerVersion }}</p>
+              <span class="main-info">CLI 版本：</span>
+              <span class="minor-info">{{ CLIInfo.CliInfo.CliVersion }}</span>
+              <br />
+              <span class="main-info">平台：</span>
+              <span class="minor-info">{{ CLIInfo.CliInfo.Platform }}</span>
+              <br />
+              <span class="main-info">Docker 版本：</span>
+              <span class="minor-info">
+                {{ CLIInfo.CliInfo.DockerVersion }}
+              </span>
             </el-col>
             <el-col :span="12">
-              <p>镜像总数：{{ CLIInfo.CliInfo.ImagesCount }}</p>
-              <p>网络总数：{{ CLIInfo.CliInfo.NetworksCount }}</p>
+              <span class="main-info">镜像总数：</span>
+              <span class="minor-info">
+                {{ CLIInfo.CliInfo.ImagesCount }}
+              </span>
+              <br />
+              <span class="main-info">网络总数：</span>
+              <span class="minor-info">
+                {{ CLIInfo.CliInfo.NetworksCount }}
+              </span>
             </el-col>
           </el-row>
         </el-card>
@@ -91,18 +118,32 @@ export default {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    align-content: space-around;
+    padding: 0;
     .info-card {
+      background-color: #ebeef5;
       width: 500px;
       border: 1px solid #ebeef5 !important;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
-      .clearfix {
-        display: flex;
-        .blue-box {
-          height: inherit;
-          width: 5px;
-          margin-right: 10px;
-          background-color: #409eff;
+      margin: 20px;
+      /deep/ .el-card__header {
+        border-bottom: 1px solid #c0c4cc;
+        .clearfix {
+          font-weight: bold;
+          display: flex;
+          .blue-box {
+            height: inherit;
+            width: 5px;
+            margin-right: 10px;
+            background-color: #409eff;
+          }
         }
+      }
+      .main-info {
+        color: #303133;
+      }
+      .minor-info {
+        color: #909399;
       }
     }
   }
