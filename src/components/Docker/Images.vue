@@ -61,6 +61,7 @@
 
 <script>
 export default {
+  name: 'Images',
   components: {},
   props: [],
   data() {
@@ -82,9 +83,10 @@ export default {
   methods: {
     // 获取镜像数据列表
     async getImagesList() {
+      this.isLoading = true
       const params = this._.cloneDeep(this.queryInfo)
       params.skip -= 1
-      const { data: res } = await this.axios.get('images/', {
+      const { data: res } = await this.axios.get('images', {
         params
       })
       if (res.Code === 0) {
@@ -97,14 +99,12 @@ export default {
     },
     // 修改每页数据条目数
     pageSizeChange(newSize) {
-      this.isLoading = true
       this.queryInfo.skip = 1 // 重置起始页为 1
       this.queryInfo.limit = newSize
       this.getImagesList()
     },
     // 切换当前显示页
     handleCurrentChange(newPage) {
-      this.isLoading = true
       this.queryInfo.skip = newPage
       this.getImagesList()
     }

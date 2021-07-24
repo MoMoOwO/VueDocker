@@ -81,6 +81,7 @@
 
 <script>
 export default {
+  name: 'Conatiners',
   components: {},
   props: [],
   data() {
@@ -105,9 +106,10 @@ export default {
   methods: {
     // 获取容器数数据列表
     async getContainersList() {
+      this.isLoading = true
       const params = this._.cloneDeep(this.queryInfo)
       params.skip -= 1
-      const { data: res } = await this.axios.get('containers/', {
+      const { data: res } = await this.axios.get('containers', {
         params
       })
       if (res.Code === 0) {
@@ -135,14 +137,12 @@ export default {
     },
     // 修改每页数据条目数
     pageSizeChange(newSize) {
-      this.isLoading = true
       this.queryInfo.skip = 1 // 重置起始页为 1
       this.queryInfo.limit = newSize
       this.getContainersList()
     },
     // 切换当前显示页
     handleCurrentChange(newPage) {
-      this.isLoading = true
       this.queryInfo.skip = newPage
       this.getContainersList()
     }
