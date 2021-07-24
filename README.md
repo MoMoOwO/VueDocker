@@ -4,16 +4,20 @@
 
 ## 技术支持
 
-### 安装运行
+### 项目安装
 
-1. xx
-2. xxx
+1. 项目下载：`git clone https://github.com/MoMoOwO/VueDocker.git`
+2. 安装依赖：`npm install`
 
-## 组件依赖
+### 项目运行
 
-1. xxx
-2. xxxx
+1. 开发运行：`npm run serve`
+2. 项目构建：`npm run build`
 
+## 开发依赖
+
+1. [Vue.js](https://cn.vuejs.org/)
+2. [Element UI](https://element.eleme.cn/#/zh-CN)
 ## License
 
 [MIT](https://github.com/MoMoOwO/VueDocker/LICENSE)
