@@ -8,6 +8,10 @@ import Dashboard from '../components/Local/Dashboard.vue'
 import Images from '../components/Docker/Images.vue'
 import Containers from '../components/Docker/Containers.vue'
 import Networks from '../components/Docker/Networks.vue'
+import Volumes from '../components/Docker/Volumes.vue'
+import Search from '../components/Docker/Search.vue'
+import Users from '../components/Settings/Users.vue'
+import Config from '../components/Settings/Config.vue'
 
 Vue.use(VueRouter)
 
@@ -23,7 +27,11 @@ const routes = [
       { path: '/dashboard', component: Dashboard },
       { path: '/images', component: Images },
       { path: '/containers', component: Containers },
-      { path: '/networks', component: Networks }
+      { path: '/networks', component: Networks },
+      { path: '/volumes', component: Volumes },
+      { path: '/search', component: Search },
+      { path: '/users', component: Users },
+      { path: '/config', component: Config }
     ]
   }
 ]

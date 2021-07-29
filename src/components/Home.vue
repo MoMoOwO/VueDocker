@@ -146,7 +146,7 @@ export default {
             {
               id: 2,
               itemName: '配置项',
-              path: 'settings',
+              path: 'config',
               icon: 'el-icon-setting'
             }
           ]
