@@ -12,7 +12,8 @@ import {
   Card, Table, TableColumn, Loading,
   Row, Col,
   Pagination,
-  Tag
+  Tag,
+  Skeleton, SkeletonItem
 } from 'element-ui'
 // 将组建添加到 Vue 实例中
 Vue.use(Button)
@@ -36,6 +37,8 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Pagination)
 Vue.use(Tag)
+Vue.use(Skeleton)
+Vue.use(SkeletonItem)
 // 将 Message 挂载到 Vue 实例上
 Vue.prototype.$message = Message
 //
