@@ -35,11 +35,15 @@
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <span
-              v-loading="!networkDetails[scope.row.NetworkId] && detailLoading"
+            <el-skeleton
+              :loading="!networkDetails[scope.row.NetworkId] && detailLoading"
+              :rows="6"
+              animated
             >
-              {{ networkDetails[scope.row.NetworkId] }}
-            </span>
+              <template>
+                <span>{{ networkDetails[scope.row.NetworkId] }}</span>
+              </template>
+            </el-skeleton>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="NetworkId" label="网络设备ID">

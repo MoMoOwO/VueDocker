@@ -36,13 +36,17 @@
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <span
-              v-loading="
+            <el-skeleton
+              :loading="
                 !containerDetails[scope.row.ContainerId] && detailLoading
               "
+              :rows="6"
+              animated
             >
-              {{ containerDetails[scope.row.ContainerId] }}
-            </span>
+              <template>
+                <span>{{ containerDetails[scope.row.ContainerId] }}</span>
+              </template>
+            </el-skeleton>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="ContainerId" label="容器ID">
