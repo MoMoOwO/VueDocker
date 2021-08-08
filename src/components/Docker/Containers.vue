@@ -22,6 +22,14 @@
         <el-col :span="4">
           <el-button type="primary" @click="getContainersList">搜索</el-button>
         </el-col>
+        <el-col :span="4" :offset="8">
+          <el-button
+            style="float: right"
+            type="primary"
+            @click="addDialogVisible = true"
+            >新建容器</el-button
+          >
+        </el-col>
       </el-row>
 
       <!-- 列表区域 -->
@@ -79,6 +87,34 @@
         :total="total"
       >
       </el-pagination>
+
+      <!-- 新增容器对话框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="addDialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-form
+          :model="addForm"
+          :rules="addFormRules"
+          ref="addFormRef"
+          label-width="100px"
+        >
+          <el-form-item label="镜像" prop="image">
+            <el-input v-model="addForm.Image"></el-input>
+          </el-form-item>
+          <el-form-item label="容器名" prop="containerName">
+            <el-input v-model="addForm.ContainerName"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addDialogVisible = false"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -101,7 +137,21 @@ export default {
       isLoading: true,
       // 容器详情
       containerDetails: {},
-      detailLoading: true
+      detailLoading: true, // 容器详情缓冲
+      addDialogVisible: false, // 添加容器对话框是否可见
+      addForm: {
+        Image: '',
+        ContainerName: ''
+      },
+      addFormRules:
+        {
+          image: [
+            { required: true, message: '请输入镜像', trigger: 'change' }
+          ],
+          containerName: [
+            { required: true, message: '请输入容器名', trigger: 'change' }
+          ]
+        }
     }
   },
   created() {
@@ -138,6 +188,10 @@ export default {
           this.$message.error('获取容器详情失败！')
         }
       }
+    },
+    // 新增容器
+    handleClose() {
+      console.log('关闭')
     },
     // 修改每页数据条目数
     pageSizeChange(newSize) {
