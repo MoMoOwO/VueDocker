@@ -23,10 +23,15 @@ body,
 }
 
 .el-table {
-    margin-top: 15px;
-    font-size: 12px;
+  margin-top: 15px;
+  font-size: 12px;
 }
 
 .el-pagination {
   margin-top: 15px;
+}
+
+/* 隐藏无选项的下拉框 */
+.empty-select {
+  display: none;
 }

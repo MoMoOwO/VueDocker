@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="containers-com">
     <!-- 导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -74,6 +74,22 @@
         </el-table-column>
         <el-table-column align="left" prop="Names" label="容器名">
         </el-table-column>
+        <el-table-column align="left" label="操作">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              v-if="scope.row.Status.split(' ')[0] == 'Up'"
+              @click="containerSwitch(scope.row.ContainerId, 0)"
+              >停止</el-button
+            >
+            <el-button
+              type="text"
+              v-else
+              @click="containerSwitch(scope.row.ContainerId, 1)"
+              >启动</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
 
       <!-- 分页区域 -->
@@ -98,14 +114,52 @@
         <el-form
           :model="addForm"
           :rules="addFormRules"
+          :label-position="'top'"
+          size="small"
           ref="addFormRef"
           label-width="100px"
         >
-          <el-form-item label="镜像" prop="image">
-            <el-input v-model="addForm.Image"></el-input>
+          <el-form-item label="镜像名" prop="image">
+            <el-input
+              v-model="addForm.Image"
+              placeholder="请输入镜像名"
+            ></el-input>
           </el-form-item>
           <el-form-item label="容器名" prop="containerName">
-            <el-input v-model="addForm.ContainerName"></el-input>
+            <el-input
+              v-model="addForm.ContainerName"
+              placeholder="请输入容器名"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="系统环境变量" prop="Env">
+            <el-select
+              v-model="addForm.Env"
+              multiple
+              filterable
+              allow-create
+              default-first-option
+              placeholder="请输入环境变量"
+              :popper-class="'empty-select'"
+            >
+            </el-select>
+          </el-form-item>
+          <el-form-item label="端口映射" prop="BindPort">
+            <el-input
+              v-model="addForm.BindPort"
+              placeholder="请输入端口映射"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="端口映射" prop="BindPort">
+            <el-input
+              v-model="addForm.BindPort"
+              placeholder="请输入端口映射"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="网络模式" prop="BindPort">
+            <el-input
+              v-model="addForm.BindPort"
+              placeholder="请输入端口映射"
+            ></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -140,18 +194,25 @@ export default {
       detailLoading: true, // 容器详情缓冲
       addDialogVisible: false, // 添加容器对话框是否可见
       addForm: {
-        Image: '',
-        ContainerName: ''
+        Image: '', // 镜像
+        ContainerName: '', // 容器名
+        Env: [], // 系统环境变量
+        BindPort: '', // 端口映射
+        NetworkModule: '', // 网络模式
+        Type: '', // 挂载类型
+        Mounts: '', // 系统挂载路经
+        Source: '', // 系统挂载路经-宿主主机路径
+        Target: '', // 系统挂载路径-容器路径
+        ReadOnly: '', // 系统挂载-卷模式
+        RestartPolicy: '', // 重启策略
+        AutoRemove: '' // 是否自动删除
       },
-      addFormRules:
-        {
-          image: [
-            { required: true, message: '请输入镜像', trigger: 'change' }
-          ],
-          containerName: [
-            { required: true, message: '请输入容器名', trigger: 'change' }
-          ]
-        }
+      addFormRules: {
+        image: [{ required: true, message: '请输入镜像', trigger: 'change' }],
+        containerName: [
+          { required: true, message: '请输入容器名', trigger: 'change' }
+        ]
+      }
     }
   },
   created() {
@@ -193,6 +254,23 @@ export default {
     handleClose() {
       console.log('关闭')
     },
+    // 开关容器
+    async containerSwitch(containerId, opt) {
+      // 启动或关闭容器
+      const { data: res } = await this.axios.get('containers/option', {
+        params: {
+          containerId,
+          opt
+        }
+      })
+      if (res.Code === 0) {
+        this.getContainersList()
+      } else {
+        let msg = opt ? '启动' : '停止'
+        msg += '容器失败！'
+        this.$message.error(msg)
+      }
+    },
     // 修改每页数据条目数
     pageSizeChange(newSize) {
       this.queryInfo.skip = 1 // 重置起始页为 1
@@ -209,4 +287,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.containers-com {
+  .el-dialog {
+    .el-form {
+      .el-form-item__label {
+        padding: 0;
+      }
+      .el-select {
+        width: 100%;
+        .el-input__suffix {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+}
 </style>
