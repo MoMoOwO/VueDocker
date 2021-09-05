@@ -35,3 +35,12 @@ body,
 .empty-select {
   display: none;
 }
+
+.el-select.created-input .el-input__suffix {
+  display: none;
+}
+
+/* 嵌套表单项的左边距 */
+.el-form-item-inline > div.el-form-item__content {
+  margin-left: 0px !important;
+}
