@@ -77,13 +77,17 @@
         <el-table-column align="left" label="操作">
           <template slot-scope="scope">
             <el-button
-              type="text"
+              type="danger"
+              size="small"
+              round
               v-if="scope.row.Status.split(' ')[0] == 'Up'"
               @click="containerSwitch(scope.row.ContainerId, 0)"
               >停止</el-button
             >
             <el-button
-              type="text"
+              type="success"
+              size="small"
+              round
               v-else
               @click="containerSwitch(scope.row.ContainerId, 1)"
               >启动</el-button
@@ -106,67 +110,174 @@
 
       <!-- 新增容器对话框 -->
       <el-dialog
-        title="提示"
+        title="新增容器"
         :visible.sync="addDialogVisible"
-        width="30%"
-        :before-close="handleClose"
+        width="65%"
+        @closed="addDialogClosed"
       >
         <el-form
           :model="addForm"
           :rules="addFormRules"
-          :label-position="'top'"
+          :label-position="'right'"
           size="small"
           ref="addFormRef"
           label-width="100px"
         >
-          <el-form-item label="镜像名" prop="image">
-            <el-input
-              v-model="addForm.Image"
-              placeholder="请输入镜像名"
-            ></el-input>
+          <el-form-item class="el-form-item-inline">
+            <el-col :span="12">
+              <el-form-item label="镜像名" prop="Image">
+                <el-input
+                  v-model="addForm.Image"
+                  placeholder="请输入镜像名"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="容器名" prop="ContainerName">
+                <el-input
+                  v-model="addForm.ContainerName"
+                  placeholder="请输入容器名"
+                ></el-input>
+              </el-form-item>
+            </el-col>
           </el-form-item>
-          <el-form-item label="容器名" prop="containerName">
-            <el-input
-              v-model="addForm.ContainerName"
-              placeholder="请输入容器名"
-            ></el-input>
+
+          <el-form-item class="el-form-item-inline">
+            <el-col :span="12">
+              <el-form-item label="系统环境变量" prop="Env">
+                <el-select
+                  class="created-input"
+                  v-model="addForm.Env"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请输入环境变量，输入一个变量后按回车结束"
+                  :popper-class="'empty-select'"
+                >
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="端口映射" prop="BindPort">
+                <el-input
+                  v-model="addForm.BindPort"
+                  placeholder="请输入端口映射"
+                ></el-input>
+              </el-form-item>
+            </el-col>
           </el-form-item>
-          <el-form-item label="系统环境变量" prop="Env">
-            <el-select
-              v-model="addForm.Env"
-              multiple
-              filterable
-              allow-create
-              default-first-option
-              placeholder="请输入环境变量"
-              :popper-class="'empty-select'"
+
+          <el-form-item class="el-form-item-inline">
+            <el-col :span="12">
+              <el-form-item label="网络模式" prop="NetworkModule">
+                <el-select v-model="addForm.NetworkModule" placeholder="请选择">
+                  <el-option
+                    v-for="item in NetworkModuleArr"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="挂载类型" prop="Type">
+                <el-select v-model="addForm.Type" placeholder="请选择">
+                  <el-option
+                    v-for="item in TypeArr"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="系统挂载路经" prop="Mounts">
+            <el-button
+              size="small"
+              round
+              icon="el-icon-plus"
+              plain
+              @click="addMounts"
+              >新增路径</el-button
             >
-            </el-select>
+            <div v-for="(item, index) in addForm.Mounts" :key="item.key">
+              <el-col :span="9">
+                <el-form-item
+                  label="宿主主机路径"
+                  label-width="110px"
+                  :prop="'Mounts.' + index + '.Source'"
+                  :rules="addFormRules.sourcePath"
+                >
+                  <el-input
+                    placeholder="请输入宿主主机路径"
+                    v-model="item.Source"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="9">
+                <el-form-item
+                  label="容器路径"
+                  :prop="'Mounts.' + index + '.Target'"
+                  :rules="addFormRules.targetPath"
+                >
+                  <el-input
+                    placeholder="请输入容器路径"
+                    v-model="item.Target"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label-width="55px" label="只读" prop="AutoRemove">
+                  <el-switch v-model="item.ReadOnly"></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2" style="text-align: center">
+                <el-button
+                  size="small"
+                  type="danger"
+                  icon="el-icon-close"
+                  circle
+                  plain
+                  @click="removeMounts(item, index)"
+                ></el-button>
+              </el-col>
+            </div>
           </el-form-item>
-          <el-form-item label="端口映射" prop="BindPort">
-            <el-input
-              v-model="addForm.BindPort"
-              placeholder="请输入端口映射"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="端口映射" prop="BindPort">
-            <el-input
-              v-model="addForm.BindPort"
-              placeholder="请输入端口映射"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="网络模式" prop="BindPort">
-            <el-input
-              v-model="addForm.BindPort"
-              placeholder="请输入端口映射"
-            ></el-input>
+
+          <el-form-item class="el-form-item-inline">
+            <el-col :span="12">
+              <el-form-item label="重启策略" prop="RestartPolicy">
+                <el-select
+                  v-model="addForm.RestartPolicy"
+                  clearable
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in restartPolicyArr"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="自动删除" prop="AutoRemove">
+                <el-switch v-model="addForm.AutoRemove"></el-switch>
+              </el-form-item>
+            </el-col>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addDialogVisible = false"
-            >确 定</el-button
-          >
+          <el-button type="primary" @click="addContainer">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -200,23 +311,54 @@ export default {
         BindPort: '', // 端口映射
         NetworkModule: '', // 网络模式
         Type: '', // 挂载类型
-        Mounts: '', // 系统挂载路经
-        Source: '', // 系统挂载路经-宿主主机路径
-        Target: '', // 系统挂载路径-容器路径
+        Mounts: [], // 系统挂载路经-source 宿主主机路径、target 容器路径
         ReadOnly: '', // 系统挂载-卷模式
         RestartPolicy: '', // 重启策略
-        AutoRemove: '' // 是否自动删除
+        AutoRemove: false // 是否自动删除
       },
+      // 网络模式选择项
+      NetworkModuleArr: [{ value: 'defalut', label: 'defalut' }],
+      // 挂载类型选择项
+      TypeArr: [{ value: 'bind', label: 'bind' }],
+      // 重启策略选项
+      restartPolicyArr: [
+        { value: 'always', label: 'always' },
+        { value: 'on-failure', label: 'on-failure' }
+      ],
       addFormRules: {
-        image: [{ required: true, message: '请输入镜像', trigger: 'change' }],
-        containerName: [
-          { required: true, message: '请输入容器名', trigger: 'change' }
+        Image: [{ required: true, message: '请输入镜像', trigger: 'blur' }],
+        ContainerName: [
+          { required: true, message: '请输入容器名', trigger: 'blur' }
+        ],
+        sourcePath: [
+          { required: true, message: '请输入宿主主机路径', trigger: 'blur' }
+        ],
+        targetPath: [
+          { required: true, message: '请输入容器路径', trigger: 'blur' }
         ]
       }
     }
   },
   created() {
     this.getContainersList()
+  },
+  watch: {
+    'addForm.RestartPolicy': {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.addForm.AutoRemove = true
+        } else {
+          this.addForm.AutoRemove = false
+        }
+      }
+    },
+    'addForm.AutoRemove': {
+      handler(newVal, oldVal) {
+        if (!newVal) {
+          this.addForm.RestartPolicy = ''
+        }
+      }
+    }
   },
   methods: {
     // 获取容器数数据列表
@@ -250,9 +392,74 @@ export default {
         }
       }
     },
-    // 新增容器
-    handleClose() {
-      console.log('关闭')
+    // 新增容器关闭
+    addDialogClosed() {
+      // 将表单清空
+      // this.$refs.addFormRef.resetFields()
+      this.addForm = {
+        Image: '',
+        ContainerName: '',
+        Env: [],
+        BindPort: '',
+        NetworkModule: '',
+        Type: '',
+        Mounts: [],
+        ReadOnly: '',
+        RestartPolicy: '',
+        AutoRemove: false
+      }
+    },
+    // 提交新增容器信息
+    addContainer() {
+      this.$refs.addFormRef.validate(async (valid) => {
+        if (!valid) {
+          // 表单验证不通过
+          return 0
+        } else {
+          console.log(this.addForm)
+          const { data: res } = this.axios.post(
+            'containers/create',
+            JSON.stringify(this.addForm),
+            {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
+          // 这样直接是 application/json 格式
+          /* const { data: res } = this.axios.post(
+            'containers/create',
+            this.addForm
+          ) */
+          console.log(res)
+          if (res.Code === 0) {
+            this.$message.error('添加容器成功！')
+            this.getContainersList()
+          } else {
+            this.$message.error('添加容器失败！')
+          }
+          this.addDialogVisible = false
+        }
+      })
+    },
+
+    // 新增容器-新增系统挂载路径
+    addMounts() {
+      this.addForm.Mounts.push({
+        key: new Date().getTime(),
+        Source: '',
+        Target: '',
+        ReadOnly: false
+      })
+    },
+    // 新增容器-删除系统挂载路径
+    removeMounts(item) {
+      const index = this.addForm.Mounts.indexOf(item)
+      if (index !== -1) {
+        this.addForm.Mounts.splice(index, 1)
+      } else {
+        this.$message.error('删除失败！')
+      }
     },
     // 开关容器
     async containerSwitch(containerId, opt) {
@@ -295,9 +502,6 @@ export default {
       }
       .el-select {
         width: 100%;
-        .el-input__suffix {
-          visibility: hidden;
-        }
       }
     }
   }
