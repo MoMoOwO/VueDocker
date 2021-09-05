@@ -15,7 +15,9 @@ import {
   Tag,
   Skeleton, SkeletonItem,
   Dialog,
-  Select
+  Select,
+  Option,
+  Switch
 } from 'element-ui'
 // 将组建添加到 Vue 实例中
 Vue.use(Button)
@@ -43,6 +45,8 @@ Vue.use(Skeleton)
 Vue.use(SkeletonItem)
 Vue.use(Dialog)
 Vue.use(Select)
+Vue.use(Option)
+Vue.use(Switch)
 // 将 Message 挂载到 Vue 实例上
 Vue.prototype.$message = Message
 //
